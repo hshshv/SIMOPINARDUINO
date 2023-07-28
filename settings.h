@@ -27,4 +27,5 @@
 
 //gameplay
 #define COLOR_DISPLAY_DURATION 600
+#define AFTER_DISPLAY_DELAY 600
 #define NUM_OF_LEVELS 8
