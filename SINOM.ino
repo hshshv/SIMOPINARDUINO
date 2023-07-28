@@ -84,6 +84,7 @@ void showColorSeq(int* seq, int numOfColors)
   for (int i = 0; i < numOfColors; ++i)
   {
     displayColor(colors[seq[i]]);
+    delay(AFTER_DISPLAY_DELAY);
   }
 }
 
