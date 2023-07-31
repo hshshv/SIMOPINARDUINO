@@ -17,22 +17,37 @@ colorIO colors[NUMBER_OF_COLORS] =
 
 void setup()
 {
-  // initializng buttons to pull up state
+  Serial.begin(9600);
+  // initializng buttons to pull up state and LEDs to OUTPUT
   for (int i = 0; i < NUMBER_OF_COLORS; ++i)
   {
     pinMode(colors[i].button, INPUT);
     digitalWrite(colors[i].button, HIGH);
+
+    pinMode(colors[i].led, OUTPUT);
   }
+  SIMON();
 }
 
 void loop()
 {
+  SIMON();
+  delay(3000);
+}
+
+void SIMON()
+{
   int level = 0;
-  for (level = 0; level < NUM_OF_LEVELS; ++level)
+  for (level = 1; level < NUM_OF_LEVELS; ++level)
   {
     if (!doGameRound(level))
     {
       break;
+    }
+    else
+    {
+      showLevelEndAnimation();
+      delay(DELAY_BETWEEN_LEVELS);
     }
   }
   if (level == NUM_OF_LEVELS)
@@ -53,7 +68,10 @@ int getNextPress()
     {
       if (digitalRead(colors[i].button) == LOW)
       {
+        digitalWrite(colors[i].led, HIGH);
         delay(AFTER_PRESS_DELAY);
+        while(digitalRead(colors[i].button) == LOW) {} // whiting for the button to de-press
+        digitalWrite(colors[i].led, LOW);
         return (i);
       }
     }
@@ -105,10 +123,41 @@ bool doGameRound(int level)
 
 void showLoosingAnimation()
 {
-
+  for (int i = 0; i < 10; ++i)
+  {
+    setAllLeds(HIGH);
+    delay(300);
+    setAllLeds(LOW);
+    delay(300);
+  }
 }
 
 void showWinningAnimation()
 {
+  for (int i = 0; i < 20; ++i)
+  {
+    setAllLeds(HIGH);
+    delay(150);
+    setAllLeds(LOW);
+    delay(150);
+  }
+}
 
+void showLevelEndAnimation()
+{
+  for (int i = 0; i < 4; ++i)
+  {
+    setAllLeds(HIGH);
+    delay(200);
+    setAllLeds(LOW);
+    delay(200);
+  }
+}
+
+void setAllLeds(bool newLedsState)
+{
+  for (int i = 0; i < NUMBER_OF_COLORS; ++i)
+  {
+    digitalWrite(colors[i].led, newLedsState);
+  }
 }
